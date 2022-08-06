@@ -7,6 +7,7 @@ import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import { styled } from "@mui/material/styles";
+import { useEffect, useState } from "react";
 
 const StylePaper = styled(Paper)(({ theme }) => ({
   width: "100%",
@@ -17,64 +18,62 @@ const StyleTable = styled(Table)({
   minWidth: 1080,
 });
 
-const customers = [
-  {
-    id: 1,
-    image: "https://placeimg.com/64/64/1",
-    name: "홍길동",
-    birthday: "961112",
-    gender: "남자",
-    job: "대학생",
-  },
-  {
-    id: 2,
-    image: "https://placeimg.com/64/64/2",
-    name: "정소철",
-    birthday: "901021",
-    gender: "남자",
-    job: "프로그래머",
-  },
-  {
-    id: 3,
-    image: "https://placeimg.com/64/64/3",
-    name: "김희소",
-    birthday: "920208",
-    gender: "여자",
-    job: "회계사",
-  },
-];
-
 function App() {
+  const [loading, setLoading] = useState(true);
+  const [customers, setCustomers] = useState([]);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    getCustomers();
+  }, []);
+  const getCustomers = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await fetch("/api/customers");
+      const body = await response.json();
+      setCustomers(body);
+      setLoading(false);
+    } catch (error) {
+      setError(error);
+    }
+  };
   return (
-    <StylePaper>
-      <StyleTable>
-        <TableHead>
-          <TableRow>
-            <TableCell>번호</TableCell>
-            <TableCell>이미지</TableCell>
-            <TableCell>이름</TableCell>
-            <TableCell>생년월일</TableCell>
-            <TableCell>성별</TableCell>
-            <TableCell>직업</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {customers.map((customer) => {
-            return (
-              <Customer
-                key={customer.id}
-                id={customer.id}
-                image={customer.image}
-                name={customer.name}
-                birthday={customer.birthday}
-                gender={customer.gender}
-                job={customer.job}
-              />
-            );
-          })}
-        </TableBody>
-      </StyleTable>
-    </StylePaper>
+    <>
+      {error && <div>에러가 발생했습니다: {error}</div>}
+      {loading ? (
+        <div style={{ textAlign: "center" }}>Loading...</div>
+      ) : (
+        <StylePaper>
+          <StyleTable>
+            <TableHead>
+              <TableRow>
+                <TableCell>번호</TableCell>
+                <TableCell>이미지</TableCell>
+                <TableCell>이름</TableCell>
+                <TableCell>생년월일</TableCell>
+                <TableCell>성별</TableCell>
+                <TableCell>직업</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {customers.map((customer) => {
+                return (
+                  <Customer
+                    key={customer.id}
+                    id={customer.id}
+                    image={customer.image}
+                    name={customer.name}
+                    birthday={customer.birthday}
+                    gender={customer.gender}
+                    job={customer.job}
+                  />
+                );
+              })}
+            </TableBody>
+          </StyleTable>
+        </StylePaper>
+      )}
+    </>
   );
 }
 
