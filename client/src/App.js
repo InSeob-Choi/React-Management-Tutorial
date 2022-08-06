@@ -8,15 +8,19 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const StylePaper = styled(Paper)(({ theme }) => ({
   width: "100%",
-  marginTop: theme.spacing.uni * 3,
+  marginTop: theme.spacing.unit * 3,
   overflowX: "auto",
 }));
 const StyleTable = styled(Table)({
   minWidth: 1080,
 });
+const StyleCircularProgress = styled(CircularProgress)(({ theme }) => ({
+  margin: theme.spacing.unit * 2,
+}));
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -40,23 +44,27 @@ function App() {
   return (
     <>
       {error && <div>에러가 발생했습니다: {error}</div>}
-      {loading ? (
-        <div style={{ textAlign: "center" }}>Loading...</div>
-      ) : (
-        <StylePaper>
-          <StyleTable>
-            <TableHead>
+      <StylePaper>
+        <StyleTable>
+          <TableHead>
+            <TableRow>
+              <TableCell>번호</TableCell>
+              <TableCell>이미지</TableCell>
+              <TableCell>이름</TableCell>
+              <TableCell>생년월일</TableCell>
+              <TableCell>성별</TableCell>
+              <TableCell>직업</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {loading ? (
               <TableRow>
-                <TableCell>번호</TableCell>
-                <TableCell>이미지</TableCell>
-                <TableCell>이름</TableCell>
-                <TableCell>생년월일</TableCell>
-                <TableCell>성별</TableCell>
-                <TableCell>직업</TableCell>
+                <TableCell colSpan="6" align="center">
+                  <StyleCircularProgress />
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {customers.map((customer) => {
+            ) : (
+              customers.map((customer) => {
                 return (
                   <Customer
                     key={customer.id}
@@ -68,11 +76,11 @@ function App() {
                     job={customer.job}
                   />
                 );
-              })}
-            </TableBody>
-          </StyleTable>
-        </StylePaper>
-      )}
+              })
+            )}
+          </TableBody>
+        </StyleTable>
+      </StylePaper>
     </>
   );
 }
