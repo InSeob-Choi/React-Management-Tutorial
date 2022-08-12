@@ -1,5 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
+import fs from "fs";
+import mysql from "mysql";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -7,33 +9,23 @@ const port = process.env.PORT || 4000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+const data = fs.readFileSync("./database.json");
+const conf = JSON.parse(data);
+
+const connection = mysql.createConnection({
+  host: conf.host,
+  user: conf.user,
+  password: conf.password,
+  port: conf.port,
+  database: conf.database,
+});
+
+connection.connect();
+
 app.get("/api/customers", (req, res) => {
-  res.send([
-    {
-      id: 1,
-      image: "https://placeimg.com/64/64/1",
-      name: "홍길동",
-      birthday: "961112",
-      gender: "남자",
-      job: "대학생",
-    },
-    {
-      id: 2,
-      image: "https://placeimg.com/64/64/2",
-      name: "정소철",
-      birthday: "901021",
-      gender: "남자",
-      job: "프로그래머",
-    },
-    {
-      id: 3,
-      image: "https://placeimg.com/64/64/3",
-      name: "김희소",
-      birthday: "920208",
-      gender: "여자",
-      job: "회계사",
-    },
-  ]);
+  connection.query("SELECT * from customer", (err, rows, fields) => {
+    res.send(rows);
+  });
 });
 
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
