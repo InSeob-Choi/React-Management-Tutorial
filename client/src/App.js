@@ -9,6 +9,7 @@ import TableCell from "@mui/material/TableCell";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
+import CustomerAdd from "./components/CustomerAdd";
 
 const StylePaper = styled(Paper)(({ theme }) => ({
   width: "100%",
@@ -41,6 +42,14 @@ function App() {
       setError(error);
     }
   };
+  // ⭐️ 아래 stateRefresh 함수를 통해서, 새로운 데이터 생성 후 => 다시 데이터를 받아오도록 함.
+  // 그래서 추가된 부분만 추가해서 보여줄 수 있게 됨. (전체 페이지 새로고침 없이)
+  // 실제 상용화할 때는 최근 10개만 불러오도록 한 후에, 나머지는 스크롤을 통해 새롭게 불러오도록 해야 함!!
+  const stateRefresh = () => {
+    setCustomers([]);
+    getCustomers();
+  };
+
   return (
     <>
       {error && <div>에러가 발생했습니다: {error}</div>}
@@ -81,6 +90,7 @@ function App() {
           </TableBody>
         </StyleTable>
       </StylePaper>
+      <CustomerAdd stateRefresh={stateRefresh} />
     </>
   );
 }

@@ -7,7 +7,11 @@ function Customer(props) {
     <TableRow>
       <TableCell>{props.id}</TableCell>
       <TableCell>
-        <img src={props.image} alt="profile" />
+        <img
+          src={props.image}
+          alt="profile"
+          style={{ width: "60px", height: "60px" }}
+        />
       </TableCell>
       <TableCell>{props.name}</TableCell>
       <TableCell>{props.birthday}</TableCell>
