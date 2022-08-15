@@ -1,5 +1,16 @@
 import React, { useState } from "react";
 import { post } from "axios";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 
 function CustomerAdd({ stateRefresh }) {
   const [file, setFile] = useState(null);
@@ -8,6 +19,20 @@ function CustomerAdd({ stateRefresh }) {
   const [birthday, setBirthday] = useState("");
   const [gender, setGender] = useState("");
   const [job, setJob] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setFile(null);
+    setFileName("");
+    setUserName("");
+    setBirthday("");
+    setGender("");
+    setJob("");
+    setOpen(false);
+  };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -21,6 +46,7 @@ function CustomerAdd({ stateRefresh }) {
     setBirthday("");
     setGender("");
     setJob("");
+    setOpen(false);
   };
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -49,6 +75,86 @@ function CustomerAdd({ stateRefresh }) {
   };
 
   return (
+    <div>
+      <Button variant="contained" color="primary" onClick={handleClickOpen}>
+        고객 추가하기
+      </Button>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>고객 추가</DialogTitle>
+        <DialogContent>
+          <input
+            style={{ display: "none" }}
+            accept="image/*"
+            type="file"
+            id="raised-button-file"
+            file={file}
+            value={fileName}
+            onChange={handleFileChange}
+          />
+          <label htmlFor="raised-button-file">
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              name="file"
+            >
+              {fileName === "" ? "프로필 이미지 선택" : fileName}
+            </Button>
+          </label>
+          <br />
+          <TextField
+            label="이름"
+            type="text"
+            name="userName"
+            value={userName}
+            onChange={handleValueChange}
+          />
+          <br />
+          <TextField
+            label="생년월일"
+            type="text"
+            name="birthday"
+            value={birthday}
+            onChange={handleValueChange}
+          />
+          <br />
+          <FormControl>
+            <FormLabel id="demo-controlled-radio-buttons-group">성별</FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="demo-controlled-radio-buttons-group"
+              name="gender"
+              value={gender}
+              onChange={handleValueChange}
+            >
+              <FormControlLabel value="남자" control={<Radio />} label="남자" />
+              <FormControlLabel value="여자" control={<Radio />} label="여자" />
+            </RadioGroup>
+          </FormControl>
+          <br />
+          <TextField
+            label="직업"
+            type="text"
+            name="job"
+            value={job}
+            onChange={handleValueChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleFormSubmit}
+          >
+            추가
+          </Button>
+          <Button variant="outlined" color="primary" onClick={handleClose}>
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+    /*
     <form onSubmit={handleFormSubmit}>
       <h1>고객 추가</h1>
       프로필 이미지:{" "}
@@ -77,7 +183,7 @@ function CustomerAdd({ stateRefresh }) {
       />
       <br />
       성별:{" "}
-      <ul>
+      <ul style={{ listStyle: "none" }}>
         <li>
           <label>
             <input
@@ -103,17 +209,12 @@ function CustomerAdd({ stateRefresh }) {
           </label>
         </li>
       </ul>
-      {/* <input
-        type="text"
-        name="gender"
-        value={gender}
-        onChange={handleValueChange}
-      /> */}
       <br />
       직업:{" "}
       <input type="text" name="job" value={job} onChange={handleValueChange} />
       <button type="submit">추가하기</button>
     </form>
+    */
   );
 }
 
