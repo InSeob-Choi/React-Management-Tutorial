@@ -1,5 +1,5 @@
 import React from "react";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import CustomerDelete from "./CustomerDelete";
 
